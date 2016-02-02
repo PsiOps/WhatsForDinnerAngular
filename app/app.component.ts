@@ -1,14 +1,12 @@
 import {Component} from 'angular2/core';
 import {RecipeListComponent} from './recipe-list/recipe-list.component';
-import {RecipeFormComponent} from './recipe-form/recipe-form.component';
+import {RecipeResource} from './services/recipe.resource';
 
 @Component({
     selector: 'wfd-app',
-    directives: [RecipeListComponent, RecipeFormComponent],
+    providers: [RecipeResource],
+    directives: [RecipeListComponent],
     templateUrl: 'app/app.component.html'
 })
-export class AppComponent { 
-    
-    
-    
-}
+
+export class AppComponent { }
