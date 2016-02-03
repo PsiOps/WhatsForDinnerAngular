@@ -20,20 +20,27 @@ export class RecipeListComponent implements OnInit
         this.getRecipes();
     }
     
-    getRecipes(){
+    private getRecipes() : void {
         this._recipeResource.Get().then(recipes => this.recipes = recipes);
     }
     
-    public recipes;
-    
+    public recipes : Recipe[];
     public selectedRecipe: Recipe;
+    public isCardVisible: Boolean;
     
-    onSelect(recipe: Recipe){
+    public onSelect(recipe: Recipe) : void {
+        
+        if(isCardVisible) return;
+        
         this.selectedRecipe = recipe;
     }
+    
+    public onEditButtonClicked(recipe: Recipe): void {
+        this.selectedRecipe = recipe;
+        this.isCardVisible = true;
+    }
+    
+    public onFormClosed() : void {
+        this.isCardVisible = false;
+    }
 }
-
-var RECIPES : Recipe[] = [
-    {"name": "Pannekoeken", "description": "Bak ze in een pan"},
-    {"name": "Nasi", "description": "Gekruide gebakken rijst uit de wok"},
-    ]

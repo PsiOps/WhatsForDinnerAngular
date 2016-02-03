@@ -1,6 +1,7 @@
-<div class="form" *ngIf="recipe">
+<div class="form" *ngIf="isVisible">
     <h2>Recipe Form</h2>
     <h3>Recipe: {{recipe.name}}</h3>
     <div><label>Name: </label><input [(ngModel)]="recipe.name" type="text" /></div>
     <div><label>Description: </label><input [(ngModel)]="recipe.description" type="text" /></div>
+    <div><button type="button" (click)="onCloseButtonClicked()">Close</button></div>
 </div>

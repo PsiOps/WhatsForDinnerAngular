@@ -11,13 +11,7 @@
 
 .recipes{
     margin: 0 0 2em 0;
-    list-style-type: none;
     padding: 0;
-    /*width: 10em;*/
-}
-
-.recipes li {
-    cursor: pointer;
     position: relative;
     left: 0;
     background-color: #EEE;
@@ -27,11 +21,11 @@
     border-radius: 4px;
 }
   
-.recipes li.selected:hover {
+.recipes .selected:hover {
     color: white;
 }
 
-.recipes li:hover {
+.recipes:hover {
     color: #607D8B;
     background-color: #EEE;
     left: .1em;
@@ -40,4 +34,8 @@
 .recipes .text {
     position: relative;
     top: -3px;
+}
+
+.buttons{
+    float: right;
 }
