@@ -9,7 +9,6 @@ import {RecipeResource} from '../services/recipe.resource';
     templateUrl: 'app/recipe-list/recipe-list.component.html',
     directives: [RecipeFormComponent],
     styleUrls: ['app/recipe-list/recipe-list.css']
-    //providers: ['RecipeResource'] Inherited from AppComponent
 })
 
 export class RecipeListComponent implements OnInit
@@ -21,7 +20,9 @@ export class RecipeListComponent implements OnInit
     }
     
     private getRecipes() : void {
-        this._recipeResource.Get().then(recipes => this.recipes = recipes);
+        this._recipeResource.Get().subscribe(
+            recipes => this.recipes = recipes,
+            error => console.log("An error was thrown: " + error.text()));
     }
     
     public recipes : Recipe[];
