@@ -10,4 +10,8 @@
         </div>
     </div>
 </div> 
-<recipe-form [recipe]="selectedRecipe" [isVisible]="isCardVisible" (close)="onFormClosed()"></recipe-form>
+<recipe-form 
+    [recipe]="selectedRecipe" 
+    [isVisible]="isCardVisible" 
+    (close)="onFormClosed()"
+    (submit)="onFormSubmit()"></recipe-form>

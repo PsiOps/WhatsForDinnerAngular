@@ -30,8 +30,7 @@ export class RecipeListComponent implements OnInit
     public isCardVisible: Boolean;
     
     public onSelect(recipe: Recipe) : void {
-        
-        if(isCardVisible) return;
+        if(this.isCardVisible) return;
         
         this.selectedRecipe = recipe;
     }
@@ -43,5 +42,11 @@ export class RecipeListComponent implements OnInit
     
     public onFormClosed() : void {
         this.isCardVisible = false;
+    }
+    
+    public onFormSubmit() : void {
+        this._recipeResource.Post(this.selectedRecipe).subscribe(
+            res => console.log(res),
+            error => console.log("An error was thrown: " + error.text()));
     }
 }

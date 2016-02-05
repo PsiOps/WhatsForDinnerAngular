@@ -6,7 +6,7 @@ import {Recipe} from '../../models/recipe';
     templateUrl: 'app/recipe-list/recipe-form/recipe-form.component.html',
     styleUrls: ['app/recipe-list/recipe-form/recipe-form.css'],
     inputs: ['recipe', 'isVisible'],
-    outputs: ['close']
+    outputs: ['close', 'submit']
 })
 
 export class RecipeFormComponent
@@ -19,5 +19,11 @@ export class RecipeFormComponent
     
     public onCloseButtonClicked() : void {
         this.close.next();
+    }
+    
+    public submit: EventEmitter = new EventEmitter();
+    
+    public onSubmitButtonClicked() : void {
+        this.submit.next();
     }
 }

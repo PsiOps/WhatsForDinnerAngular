@@ -1,5 +1,5 @@
 import {Injectable} from 'angular2/core';
-import {Http} from 'angular2/http';
+import {Http, Headers} from 'angular2/http';
 import {Recipe} from '../models/recipe';
 import 'rxjs/add/operator/map';
 
@@ -11,12 +11,16 @@ export class RecipeResource {
     
     public Get(): any {
         
-        return this._http.get('https://188.226.154.191:8080/api/recipes')
+        return this._http.get('https://lemmingsontour.nl:3002/api/recipes')
             .map(res => res.json());
     }
+    
+    public Post(recipe: Recipe) : any {
+        
+        var headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+    
+        return this._http.post('https://lemmingsontour.nl:3002/api/recipes', JSON.stringify(recipe), {headers:headers})
+            .map(res => res.json())
+    }
 }
-
-var RECIPES : Recipe[] = [
-    {"name": "Pannekoeken", "description": "Bak ze in een pan"},
-    {"name": "Nasi", "description": "Gekruide gebakken rijst uit de wok"},
-    ]
