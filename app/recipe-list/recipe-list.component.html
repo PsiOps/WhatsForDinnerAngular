@@ -1,5 +1,6 @@
 <div class="list">
     <h2>Recipe List</h2>
+    <button type="button" (click)="onAddButtonClicked()">Add</button>
     <div class="recipes" 
         *ngFor="#recipe of recipes"
         [class.selected]="recipe === selectedRecipe"
@@ -7,6 +8,7 @@
         Name: {{recipe.name}} Description: {{recipe.description}}
         <div class="buttons">
             <button type="button" (click)="onEditButtonClicked(recipe)">Edit</button>
+            <button type="button" (click)="onDeleteButtonClicked(recipe)">Delete</button>
         </div>
     </div>
 </div> 

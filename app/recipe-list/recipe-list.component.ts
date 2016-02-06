@@ -22,7 +22,7 @@ export class RecipeListComponent implements OnInit
     private getRecipes() : void {
         this._recipeResource.Get().subscribe(
             recipes => this.recipes = recipes,
-            error => console.log("An error was thrown: " + error.text()));
+            error => error => onHttpError(error)));
     }
     
     public recipes : Recipe[];
@@ -35,9 +35,31 @@ export class RecipeListComponent implements OnInit
         this.selectedRecipe = recipe;
     }
     
+    public onAddButtonClicked(): void {
+        
+        var recipe = new Recipe();
+        
+        this.recipes.unshift(recipe);
+        
+        this.selectedRecipe = recipe;
+        this.isCardVisible = true;
+    }
+    
     public onEditButtonClicked(recipe: Recipe): void {
         this.selectedRecipe = recipe;
         this.isCardVisible = true;
+    }
+    
+    public onDeleteButtonClicked(recipe: Recipe): void {
+        this.selectedRecipe = undefined;
+        
+        this._recipeResource.Delete(recipe)
+            .subscribe(
+                res => {
+                    console.log(res);
+                    this.getRecipes();
+                },
+                error => this.onHttpError(error)));
     }
     
     public onFormClosed() : void {
@@ -45,8 +67,25 @@ export class RecipeListComponent implements OnInit
     }
     
     public onFormSubmit() : void {
-        this._recipeResource.Post(this.selectedRecipe).subscribe(
-            res => console.log(res),
-            error => console.log("An error was thrown: " + error.text()));
+        
+        console.log(this.selectedRecipe._id);
+        
+        if(this.selectedRecipe._id){
+            this._recipeResource.Put(this.selectedRecipe)
+                .subscribe(
+                    res => console.log(res),
+                    error => this.onHttpError(error)));    
+
+            return;
+        }
+            
+        this._recipeResource.Post(this.selectedRecipe)
+            .subscribe(
+                res => console.log(res),
+                error => this.onHttpError(error)));
+    }
+    
+    private onHttpError(error: any){
+        console.log("An error was thrown: " + error.text()
     }
 }
