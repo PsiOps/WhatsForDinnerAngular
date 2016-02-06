@@ -68,8 +68,6 @@ export class RecipeListComponent implements OnInit
     
     public onFormSubmit() : void {
         
-        console.log(this.selectedRecipe._id);
-        
         if(this.selectedRecipe._id){
             this._recipeResource.Put(this.selectedRecipe)
                 .subscribe(
@@ -81,7 +79,10 @@ export class RecipeListComponent implements OnInit
             
         this._recipeResource.Post(this.selectedRecipe)
             .subscribe(
-                res => console.log(res),
+                res => {
+                    console.log(res);
+                    this.selectedRecipe = res;
+                },
                 error => this.onHttpError(error)));
     }
     
