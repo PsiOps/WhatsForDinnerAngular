@@ -3,29 +3,32 @@ import {Recipe} from '../models/recipe';
 import {RecipeFormComponent} from './recipe-form/recipe-form.component';
 import {OnInit} from 'angular2/core';
 import {RecipeResource} from '../services/recipe.resource';
+import {RecipeFactory} from '../factories/recipe.factory';
 
 @Component({
     selector: 'recipe-list',
     templateUrl: 'app/recipe-list/recipe-list.component.html',
+    providers: [RecipeFactory],
     directives: [RecipeFormComponent],
     styleUrls: ['app/recipe-list/recipe-list.css']
 })
 
 export class RecipeListComponent implements OnInit
 {
-    constructor(private _recipeResource: RecipeResource){}
+    constructor(private _recipeResource: RecipeResource,
+                private _recipeFactory: RecipeFactory){}
     
     ngOnInit() {
         this.getRecipes();
     }
     
     private getRecipes() : void {
-        this._recipeResource.Get().subscribe(
+        this._recipeResource.get().subscribe(
             recipes => this.recipes = recipes,
             error => error => onHttpError(error)));
     }
     
-    public recipes : Recipe[];
+    public recipes : Recipe[] = [];
     public selectedRecipe: Recipe;
     public isCardVisible: Boolean;
     
@@ -37,7 +40,7 @@ export class RecipeListComponent implements OnInit
     
     public onAddButtonClicked(): void {
         
-        var recipe = new Recipe();
+        var recipe = this._recipeFactory.create();
         
         this.recipes.unshift(recipe);
         
@@ -53,7 +56,7 @@ export class RecipeListComponent implements OnInit
     public onDeleteButtonClicked(recipe: Recipe): void {
         this.selectedRecipe = undefined;
         
-        this._recipeResource.Delete(recipe)
+        this._recipeResource.delete(recipe)
             .subscribe(
                 res => {
                     console.log(res);
@@ -69,7 +72,7 @@ export class RecipeListComponent implements OnInit
     public onFormSubmit() : void {
         
         if(this.selectedRecipe._id){
-            this._recipeResource.Put(this.selectedRecipe)
+            this._recipeResource.put(this.selectedRecipe)
                 .subscribe(
                     res => console.log(res),
                     error => this.onHttpError(error)));    
@@ -77,7 +80,7 @@ export class RecipeListComponent implements OnInit
             return;
         }
             
-        this._recipeResource.Post(this.selectedRecipe)
+        this._recipeResource.post(this.selectedRecipe)
             .subscribe(
                 res => {
                     console.log(res);

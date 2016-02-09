@@ -9,19 +9,19 @@ export class RecipeResource {
     
     constructor(private _http: Http){ }
     
-    public Get(): any {
+    public get(): any {
         
         return this._http.get('https://lemmingsontour.nl:3002/api/recipes')
             .map(res => res.json());
     }
     
-    public Post(recipe: Recipe) : any {
+    public post(recipe: Recipe) : any {
     
         return this._http.post('https://lemmingsontour.nl:3002/api/recipes', JSON.stringify(recipe), {headers:this.getHeaders()})
             .map(res => res.json())
     }
     
-    public Put(recipe: Recipe) : any {
+    public put(recipe: Recipe) : any {
         
         if(recipe._id == 0)
             throw Error("Cannot PUT a Recipe without valid Id")
@@ -32,7 +32,7 @@ export class RecipeResource {
             .map(res => res.json())
     }
     
-    public Delete(recipe: Recipe) : any {
+    public delete(recipe: Recipe) : any {
         
         if(recipe._id == 0)
             return {};
