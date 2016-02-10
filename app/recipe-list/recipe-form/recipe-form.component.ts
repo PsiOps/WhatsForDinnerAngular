@@ -1,5 +1,6 @@
-import {Component, EventEmitter} from 'angular2/core';
+import {Component} from 'angular2/core';
 import {Recipe} from '../../models/recipe';
+import {EventEmitterFactory} from "../../factories/event-emitter.factory"
 
 @Component({
     selector: 'recipe-form',
@@ -11,17 +12,22 @@ import {Recipe} from '../../models/recipe';
 
 export class RecipeFormComponent
 {
+    constructor(private _eventEmitterFactory: EventEmitterFactory){
+        this.close = this._eventEmitterFactory.create();
+        this.submit = this._eventEmitterFactory.create();
+    }
+    
     public recipe: Recipe;
     
     public isVisible: Boolean;
     
-    public close: EventEmitter = new EventEmitter();
+    public close: EventEmitter;
     
     public onCloseButtonClicked() : void {
         this.close.next();
     }
     
-    public submit: EventEmitter = new EventEmitter();
+    public submit: EventEmitter;
     
     public onSubmitButtonClicked() : void {
         this.submit.next();

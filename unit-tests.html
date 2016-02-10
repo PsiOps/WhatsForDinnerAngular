@@ -28,8 +28,9 @@
 
             Promise.all([
                 System.import('./app/recipe-list/recipe-list.component.spec'),
-                System.import('./app/services/web/recipe.resource.spec')
-                ])
+                System.import('./app/services/web/recipe.resource.spec'),
+                System.import('./app/services/recipe-selection.service.spec')
+                    ])
             // #4. wait for all imports to load ...
             //     then re-execute `window.onload` which
             //     triggers the Jasmine test-runner start

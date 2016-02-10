@@ -3,7 +3,7 @@ import {Http, Headers} from 'angular2/http';
 import {Recipe} from '../models/recipe';
 import 'rxjs/add/operator/map';
 
-@Injectable()
+@Injectable();
 
 export class RecipeResource {
     
