@@ -1,6 +1,6 @@
 import {RecipeListComponent} from './recipe-list.component';
 
-describe("Recipe List Behaviour", () => {
+describe("Recipe List", () => {
     
     var recipeListComponent : RecipeListComponent;
     var mockObservable;
@@ -11,7 +11,7 @@ describe("Recipe List Behaviour", () => {
     
     beforeEach(() => {
         
-        mockResource = { get: function(){}, delete: function(){}};
+        mockResource = { get: function(){}, delete: function(){}, post: function(){}, put: function(){}};
         
         mockObservable = { subscribe : function(){}};
         
@@ -19,6 +19,8 @@ describe("Recipe List Behaviour", () => {
         
         spyOn(mockResource, 'get').and.returnValue(mockObservable);
         spyOn(mockResource, 'delete').and.returnValue(mockObservable);
+        spyOn(mockResource, 'post').and.returnValue(mockObservable);
+        spyOn(mockResource, 'put').and.returnValue(mockObservable);
         
         mockRecipeFactory = { create: function(){}};
         
@@ -147,7 +149,7 @@ describe("Recipe List Behaviour", () => {
         });
     });
     
-    describe("When the user closed the recipe card", () => {
+    describe("When the user closes the recipe card", () => {
         
         beforeEach(() => {
             recipeListComponent.onFormClosed();
@@ -158,5 +160,44 @@ describe("Recipe List Behaviour", () => {
         });
     });
     
+    describe("When the user submits a new recipe", () => {
+        
+        beforeEach(() => {
+            
+            recipeListComponent.selectedRecipe = testRecipe;
+            
+            recipeListComponent.onFormSubmit();
+        });
+        
+        it("Calls post on the resource", () => {
+            expect(mockResource.post).toHaveBeenCalled();
+            });
+            
+        it("Updates the selectedRecipe with the post result", () => {
+            var args = mockObservable.subscribe.calls.mostRecent().args;
+        
+            var onSucces = args[0];
+         
+            var postedRecipe = {_id: "bla", name: "PostedTestRecipe"};
+         
+            onSucces(postedRecipe);
+            
+            expect(recipeListComponent.selectedRecipe).toEqual(postedRecipe);
+        });
+    });
     
+    describe("When the user updates an existing recipe", () => {
+        
+        beforeEach(() => {
+            var postedRecipe = {_id: "bla", name: "PostedTestRecipe"};
+            
+            recipeListComponent.selectedRecipe = postedRecipe;
+            
+            recipeListComponent.onFormSubmit();
+        });
+        
+        it("Calls put on the resource", () => {
+            expect(mockResource.put).toHaveBeenCalled();
+        });
+    });
 });

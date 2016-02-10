@@ -23,7 +23,7 @@ export class RecipeResource {
     
     public put(recipe: Recipe) : any {
         
-        if(recipe._id == 0)
+        if(!recipe._id)
             throw Error("Cannot PUT a Recipe without valid Id")
         
         var resouceLocation = `https://lemmingsontour.nl:3002/api/recipes/${recipe._id}`
@@ -34,7 +34,7 @@ export class RecipeResource {
     
     public delete(recipe: Recipe) : any {
         
-        if(recipe._id == 0)
+        if(!recipe._id)
             return {};
             
         var resouceLocation = `https://lemmingsontour.nl:3002/api/recipes/${recipe._id}`

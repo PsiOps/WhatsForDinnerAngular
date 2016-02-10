@@ -2,7 +2,7 @@ import {Component} from 'angular2/core';
 import {Recipe} from '../models/recipe';
 import {RecipeFormComponent} from './recipe-form/recipe-form.component';
 import {OnInit} from 'angular2/core';
-import {RecipeResource} from '../services/recipe.resource';
+import {RecipeResource} from '../services/web/recipe.resource';
 import {RecipeFactory} from '../factories/recipe.factory';
 
 @Component({

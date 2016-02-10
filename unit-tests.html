@@ -27,7 +27,8 @@
         // #3. Import the spec files explicitly
 
             Promise.all([
-                System.import('./app/recipe-list/recipe-list.component.spec')
+                System.import('./app/recipe-list/recipe-list.component.spec'),
+                System.import('./app/services/web/recipe.resource.spec')
                 ])
             // #4. wait for all imports to load ...
             //     then re-execute `window.onload` which
