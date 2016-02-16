@@ -2,31 +2,23 @@ import {RecipeResource} from "./recipe.resource";
 
 describe("Recipe Resource", () => {
     
-    var mockObservable : any;
-    var mockHttp : any;
-    var mockAppConfig : any;
+    var resourceServiceMock : any = {
+        get: function(){},
+        post: function(){},
+        put: function(){},
+        delete: function(){}
+    };
+    
     var recipeResource : RecipeResource;
     
     beforeEach(() => {
-        
-        mockObservable = {map: function(){}, json: function(){}};
-        
-        spyOn(mockObservable, 'map').and.returnValue(mockObservable);
-        spyOn(mockObservable, 'json').and.returnValue(mockObservable);
-        
-        mockHttp = {get : function(url){}, 
-                    post: function(url, data, headers){},
-                    put: function(url, data, headers){},
-                    delete: function(url, headers){}};
-               
-        mockAppConfig = {baseUrl: "test"};
              
-        spyOn(mockHttp, 'get').and.returnValue(mockObservable);
-        spyOn(mockHttp, 'post').and.returnValue(mockObservable);
-        spyOn(mockHttp, 'put').and.returnValue(mockObservable);
-        spyOn(mockHttp, 'delete').and.returnValue(mockObservable);
+        spyOn(resourceServiceMock, 'get');
+        spyOn(resourceServiceMock, 'post');
+        spyOn(resourceServiceMock, 'put');
+        spyOn(resourceServiceMock, 'delete');
         
-        recipeResource = new RecipeResource(mockHttp, mockAppConfig);
+        recipeResource = new RecipeResource(resourceServiceMock);
     });
     
     describe("Get", () => {
@@ -35,18 +27,8 @@ describe("Recipe Resource", () => {
             recipeResource.get();
         });
         
-        it("Calls get on the http service", () => {
-            expect(mockHttp.get).toHaveBeenCalledWith(mockAppConfig.baseUrl + 'recipes');
-        });
-        
-        it("casts the response to json format", () => {
-            expect(mockObservable.map).toHaveBeenCalled();
-            
-            var onMap = mockObservable.map.calls.mostRecent().args[0];
-            
-            onMap(mockObservable);
-            
-            expect(mockObservable.json).toHaveBeenCalled();
+        it("Calls get on the resource service", () => {
+            expect(resourceServiceMock.get).toHaveBeenCalledWith('recipes');
         });
     });
     
@@ -58,26 +40,14 @@ describe("Recipe Resource", () => {
             recipeResource.post(recipe);
         });
         
-        it("Calls post on the http service", () => {
-            expect(mockHttp.post).toHaveBeenCalled();
+        it("Calls post on the resource service", () => {
+            expect(resourceServiceMock.post).toHaveBeenCalled();
         });
         
-        it("provides the stringified version of the recipe", () => {
-            var data = mockHttp.post.calls.mostRecent().args[1];
+        it("provides the recipe", () => {
+            var data = resourceServiceMock.post.calls.mostRecent().args[1];
             
-            expect(data).toEqual(JSON.stringify(recipe));
-        })
-        
-        it("casts the response to json format", () => {
-            expect(mockObservable.map).toHaveBeenCalled();
-            
-            var onMap = mockObservable.map.calls.mostRecent().args[0];
-            
-            onMap(mockObservable);
-            
-            expect(mockObservable.json).toHaveBeenCalled();
-            
-            expect(mockObservable.json.calls.count()).toEqual(1);
+            expect(data).toEqual(recipe);
         });
     });
     
@@ -89,26 +59,14 @@ describe("Recipe Resource", () => {
             recipeResource.put(recipe);
         });
         
-        it("Calls put on the http service", () => {
-            expect(mockHttp.put).toHaveBeenCalled();
+        it("Calls put on the resource service", () => {
+            expect(resourceServiceMock.put).toHaveBeenCalled();
         });
         
         it("provides the stringified version of the recipe", () => {
-            var data = mockHttp.put.calls.mostRecent().args[1];
+            var data = resourceServiceMock.put.calls.mostRecent().args[1];
             
-            expect(data).toEqual(JSON.stringify(recipe));
-        })
-        
-        it("casts the response to json format", () => {
-            expect(mockObservable.map).toHaveBeenCalled();
-            
-            var onMap = mockObservable.map.calls.mostRecent().args[0];
-            
-            onMap(mockObservable);
-            
-            expect(mockObservable.json).toHaveBeenCalled();
-            
-            expect(mockObservable.json.calls.count()).toEqual(1);
+            expect(data).toEqual(recipe);
         });
     });
 
@@ -129,20 +87,8 @@ describe("Recipe Resource", () => {
             recipeResource.delete(recipe);
         });
         
-        it("Calls delete on the http service", () => {
-            expect(mockHttp.delete).toHaveBeenCalled();
-        });
-        
-        it("casts the response to json format", () => {
-            expect(mockObservable.map).toHaveBeenCalled();
-            
-            var onMap = mockObservable.map.calls.mostRecent().args[0];
-            
-            onMap(mockObservable);
-            
-            expect(mockObservable.json).toHaveBeenCalled();
-            
-            expect(mockObservable.json.calls.count()).toEqual(1);
+        it("Calls delete on the resource service", () => {
+            expect(resourceServiceMock.delete).toHaveBeenCalled();
         });
     });
 
