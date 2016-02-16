@@ -4,6 +4,7 @@ describe("Recipe Resource", () => {
     
     var mockObservable : any;
     var mockHttp : any;
+    var mockAppConfig : any;
     var recipeResource : RecipeResource;
     
     beforeEach(() => {
@@ -17,13 +18,15 @@ describe("Recipe Resource", () => {
                     post: function(url, data, headers){},
                     put: function(url, data, headers){},
                     delete: function(url, headers){}};
-                    
+               
+        mockAppConfig = {baseUrl: "test"};
+             
         spyOn(mockHttp, 'get').and.returnValue(mockObservable);
         spyOn(mockHttp, 'post').and.returnValue(mockObservable);
         spyOn(mockHttp, 'put').and.returnValue(mockObservable);
         spyOn(mockHttp, 'delete').and.returnValue(mockObservable);
         
-        recipeResource = new RecipeResource(mockHttp);
+        recipeResource = new RecipeResource(mockHttp, mockAppConfig);
     });
     
     describe("Get", () => {
@@ -33,7 +36,7 @@ describe("Recipe Resource", () => {
         });
         
         it("Calls get on the http service", () => {
-            expect(mockHttp.get).toHaveBeenCalled();
+            expect(mockHttp.get).toHaveBeenCalledWith(mockAppConfig.baseUrl + 'recipes');
         });
         
         it("casts the response to json format", () => {

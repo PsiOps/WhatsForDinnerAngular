@@ -1,6 +1,6 @@
 import {Injectable, EventEmitter} from 'angular2/core';
 
-@Injectable();
+@Injectable()
 
 export class EventEmitterFactory {
     public create() : EventEmitter {

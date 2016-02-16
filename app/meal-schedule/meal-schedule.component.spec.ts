@@ -4,7 +4,7 @@ describe("MealScheduleComponent", () => {
    
    it("registers to recipe selection events");
    
-   it("assigns the default selected day")
+   it("selects the first unscheduled day that is not in the past")
    
    describe("as a different day is selected as schedule target", () => {
        

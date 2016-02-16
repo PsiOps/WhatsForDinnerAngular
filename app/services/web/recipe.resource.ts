@@ -1,23 +1,29 @@
 import {Injectable} from 'angular2/core';
 import {Http, Headers} from 'angular2/http';
-import {Recipe} from '../models/recipe';
+import {Recipe} from '../../models/recipe';
 import 'rxjs/add/operator/map';
+import {AppConfig} from '../../app-config';
 
-@Injectable();
+@Injectable()
 
 export class RecipeResource {
     
-    constructor(private _http: Http){ }
+    private _baseUrl : String;
+    
+    constructor(private _http: Http, appConfig: AppConfig){
+        //_baseUrl = "https://whats-for-dinner-service-psiops.c9users.io/api/";
+        _baseUrl = appConfig.baseUrl;
+    }
     
     public get(): any {
         
-        return this._http.get('https://lemmingsontour.nl:3002/api/recipes')
+        return this._http.get(_baseUrl + 'recipes')
             .map(res => res.json());
     }
     
     public post(recipe: Recipe) : any {
     
-        return this._http.post('https://lemmingsontour.nl:3002/api/recipes', JSON.stringify(recipe), {headers:this.getHeaders()})
+        return this._http.post(_baseUrl + 'recipes', JSON.stringify(recipe), {headers:this.getHeaders()})
             .map(res => res.json())
     }
     
@@ -26,7 +32,7 @@ export class RecipeResource {
         if(!recipe._id)
             throw Error("Cannot PUT a Recipe without valid Id")
         
-        var resouceLocation = `https://lemmingsontour.nl:3002/api/recipes/${recipe._id}`
+        var resouceLocation = _baseUrl + `recipes/${recipe._id}`
         
         return this._http.put(resouceLocation, JSON.stringify(recipe), {headers:this.getHeaders()})
             .map(res => res.json())
@@ -37,7 +43,7 @@ export class RecipeResource {
         if(!recipe._id)
             return {};
             
-        var resouceLocation = `https://lemmingsontour.nl:3002/api/recipes/${recipe._id}`
+        var resouceLocation = _baseUrl + `recipes/${recipe._id}`
 
         return this._http.delete(resouceLocation, {headers:this.getHeaders()})
             .map(res => res.json())
