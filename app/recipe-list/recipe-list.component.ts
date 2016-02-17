@@ -16,17 +16,17 @@ import {RecipeFactory} from '../factories/recipe.factory';
 export class RecipeListComponent implements OnInit
 {
     constructor(private _recipeResource: RecipeResource,
-                private _recipeFactory: RecipeFactory){}
+                private _recipeFactory: RecipeFactory){};
     
     ngOnInit() {
         this.getRecipes();
-    }
+    };
     
     private getRecipes() : void {
         this._recipeResource.get().subscribe(
             recipes => this.recipes = recipes,
             error => error => onHttpError(error)));
-    }
+    };
     
     public recipes : Recipe[] = [];
     public selectedRecipe: Recipe;
@@ -36,7 +36,7 @@ export class RecipeListComponent implements OnInit
         if(this.isCardVisible) return;
         
         this.selectedRecipe = recipe;
-    }
+    };
     
     public onAddButtonClicked(): void {
         
@@ -46,12 +46,12 @@ export class RecipeListComponent implements OnInit
         
         this.selectedRecipe = recipe;
         this.isCardVisible = true;
-    }
+    };
     
     public onEditButtonClicked(recipe: Recipe): void {
         this.selectedRecipe = recipe;
         this.isCardVisible = true;
-    }
+    };
     
     public onDeleteButtonClicked(recipe: Recipe): void {
         this.selectedRecipe = undefined;
@@ -63,11 +63,11 @@ export class RecipeListComponent implements OnInit
                     this.getRecipes();
                 },
                 error => this.onHttpError(error)));
-    }
+    };
     
     public onFormClosed() : void {
         this.isCardVisible = false;
-    }
+    };
     
     public onFormSubmit() : void {
         
@@ -87,9 +87,9 @@ export class RecipeListComponent implements OnInit
                     this.selectedRecipe = res;
                 },
                 error => this.onHttpError(error)));
-    }
+    };
     
     private onHttpError(error: any){
-        console.log("An error was thrown: " + error.text()
-    }
+        console.log("An error was thrown: " + error.text());
+    };
 }

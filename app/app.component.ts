@@ -1,6 +1,7 @@
 import {Component} from 'angular2/core';
 import {RecipeListComponent} from './recipe-list/recipe-list.component';
 import {RecipeResource} from './services/web/recipe.resource';
+import {ScheduleDayResource} from './services/web/schedule-day.resource';
 import {ResourceService} from './services/web/resource.service';
 import {RecipeSelectionService} from './services/recipe-selection.service';
 import {EventEmitterFactory} from './factories/event-emitter.factory';
@@ -12,6 +13,7 @@ import {AppConfig} from './app.config';
     selector: 'wfd-app',
     providers: [ResourceService,
                 RecipeResource, 
+                ScheduleDayResource,
                 RecipeSelectionService, 
                 EventEmitterFactory, 
                 HTTP_PROVIDERS, 
