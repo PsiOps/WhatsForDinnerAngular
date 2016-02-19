@@ -16,6 +16,8 @@
     <script src="node_modules/angular2/bundles/angular2.dev.js"></script>
     <script src="node_modules/angular2/bundles/http.dev.js"></script>
 
+    <script src="node_modules/moment/moment.js"></script>
+    
     <script>
         // #2. Configure systemjs to use the .js extension
         //     for imports from the app folder
@@ -30,9 +32,10 @@
                 System.import('./app/recipe-list/recipe-list.component.spec'),
                 System.import('./app/recipe-list/recipe-form/recipe-form.component.spec'),
                 System.import('./app/services/web/recipe.resource.spec'),
-                System.import('./app/services/recipe-selection.service.spec'),
+                System.import('./app/services/recipe.event-aggregator.spec'),
                 System.import('./app/services/web/resource.service.spec'),
-                System.import('./app/services/web/schedule-day.resource.spec')
+                System.import('./app/services/web/schedule-day.resource.spec'),
+                System.import('./app/meal-schedule/meal-schedule.component.spec')
                     ])
             // #4. wait for all imports to load ...
             //     then re-execute `window.onload` which

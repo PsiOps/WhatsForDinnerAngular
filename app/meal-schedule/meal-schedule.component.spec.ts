@@ -4,39 +4,49 @@ describe("MealScheduleComponent", () => {
    
    var mealScheduleComponent;
    
-   var mealScheduleResourceMock = {
-      get: function(){},
-      post: function(){},
-      put: function(){},
-      delete: function(){}
-   };
+   var mealScheduleResourceMock;
    
-   var getResultObservable = {subscribe: function(){}};
+   var getResultObservable;
    
-   var recipeSelectedEvent = {subscribe: function(){}};
-   var recipeUpdatedEvent = {subscribe: function(){}};
-   var recipeDeletedEvent = {subscribe: function(){}};
+   var recipeSelectedEvent;
+   var recipeUpdatedEvent;
+   var recipeDeletedEvent;
    
-   var recipeSelectionServiceMock = {
-      recipeSelected: recipeSelectedEvent,
-      recipeUpdated: recipeUpdatedEvent,
-      recipeDeleted: recipeDeletedEvent,
-   };
+   var recipeEventAggregator;
    
    beforeEach(() => {
       
+      mealScheduleResourceMock = {
+         get: function(){},
+         post: function(){},
+         put: function(){},
+         delete: function(){}
+      };
+      
+      getResultObservable = {subscribe: function(){}};
+      
+      spyOn(getResultObservable, 'subscribe');
+   
       spyOn(mealScheduleResourceMock, 'get').and.returnValue(getResultObservable);
       spyOn(mealScheduleResourceMock, 'post');
       spyOn(mealScheduleResourceMock, 'put');
       spyOn(mealScheduleResourceMock, 'delete');
       
-      spyOn(getResultObservable, 'subscribe');
+      recipeSelectedEvent = {subscribe: function(){}};
+      recipeUpdatedEvent = {subscribe: function(){}};
+      recipeDeletedEvent = {subscribe: function(){}};
+      
+      recipeEventAggregator = {
+         recipeMarkedForScheduling: recipeSelectedEvent,
+         recipeUpdated: recipeUpdatedEvent,
+         recipeDeleted: recipeDeletedEvent,
+      };
       
       spyOn(recipeSelectedEvent, 'subscribe');
       spyOn(recipeUpdatedEvent, 'subscribe');
       spyOn(recipeDeletedEvent, 'subscribe');
       
-      mealScheduleComponent = new MealScheduleComponent(mealScheduleResourceMock, recipeSelectionServiceMock);
+      mealScheduleComponent = new MealScheduleComponent(mealScheduleResourceMock, recipeEventAggregator);
       
       mealScheduleComponent.ngOnInit();
    });
@@ -57,15 +67,15 @@ describe("MealScheduleComponent", () => {
    
    describe("as the schedule data completes downloading", () => {
       
-      var today = new Date();
+      var today = new moment();
       
       var data = [
-         { day = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1), recipeId: "" },
-         { day = new Date(today.getFullYear(), today.getMonth(), today.getDate()), recipeId: "scheduled", recipe: {Name: "Test"}},
-         { day = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1), recipeId: "" },
-         { day = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2), recipeId: "" },
-         { day = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3), recipeId: "scheduled", recipe: {Name: "Test"}},
-         { day = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 4), recipeId: "" }
+         { day: today.add(-1, 'day').toDate() },
+         { day: today.toDate(), recipeId: "scheduled", recipe: {Name: "Test"}},
+         { day: today.add(1, 'day').toDate() },
+         { day: today.add(2, 'day').toDate() },
+         { day: today.add(3, 'day').toDate(), recipeId: "scheduled", recipe: {Name: "Test"}},
+         { day: today.add(4, 'day').toDate() }
          ];
       
       var onDataDownloaded;
@@ -103,15 +113,15 @@ describe("MealScheduleComponent", () => {
           
           beforeEach(() => {
              
-             mealScheduleComponent.onSelect(data[3]);
-             
+             mealScheduleComponent.onSelect(data[3]);     
+            
              var onRecipeScheduled = recipeSelectedEvent.subscribe.calls.mostRecent().args[0];
              
              onRecipeScheduled(testRecipe);
           });
           
           it("it updates the schedule day recipe id", () => {
-             expect(mealScheduleComponent.selectedDay.recipeId).toBe(testRecipe._id)
+             expect(data[3].recipeId).toBe(testRecipe._id)
           });
           
           it("it posts the updated schedule day to the resource", () => {
@@ -119,7 +129,7 @@ describe("MealScheduleComponent", () => {
              expect(mealScheduleResourceMock.post).toHaveBeenCalled();
           });
           
-          xit("it informs the ShoppingListService");
+          it("it informs the ShoppingListService");
           
           it("selects the next unscheduled day in the future", () => {
              // the very next day is already scheduled with a recipe,
@@ -154,7 +164,7 @@ describe("MealScheduleComponent", () => {
          
          it("it updates the schedule day recipe id", () => {
             
-            expect(mealScheduleComponent.selectedDay.recipeId).toBe(testRecipe._id)
+            expect(data[1].recipeId).toBe(testRecipe._id)
          });
          
          it("puts the updated schedule day to the resource", () =>{

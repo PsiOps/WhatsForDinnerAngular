@@ -25,7 +25,7 @@ export class RecipeListComponent implements OnInit
     private getRecipes() : void {
         this._recipeResource.get().subscribe(
             recipes => this.recipes = recipes,
-            error => error => onHttpError(error)));
+            error => onHttpError(error)));
     };
     
     public recipes : Recipe[] = [];
