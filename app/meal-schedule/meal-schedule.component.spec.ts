@@ -13,12 +13,14 @@ describe("MealScheduleComponent", () => {
    
    var getResultObservable = {subscribe: function(){}};
    
-   var eventEmitterMock = {
-     subscribe: function(){} 
-   };
+   var recipeSelectedEvent = {subscribe: function(){}};
+   var recipeUpdatedEvent = {subscribe: function(){}};
+   var recipeDeletedEvent = {subscribe: function(){}};
    
    var recipeSelectionServiceMock = {
-      recipeSelected: eventEmitterMock;
+      recipeSelected: recipeSelectedEvent,
+      recipeUpdated: recipeUpdatedEvent,
+      recipeDeleted: recipeDeletedEvent,
    };
    
    beforeEach(() => {
@@ -30,7 +32,9 @@ describe("MealScheduleComponent", () => {
       
       spyOn(getResultObservable, 'subscribe');
       
-      spyOn(eventEmitterMock, 'subscribe');
+      spyOn(recipeSelectedEvent, 'subscribe');
+      spyOn(recipeUpdatedEvent, 'subscribe');
+      spyOn(recipeDeletedEvent, 'subscribe');
       
       mealScheduleComponent = new MealScheduleComponent(mealScheduleResourceMock, recipeSelectionServiceMock);
       
@@ -44,9 +48,11 @@ describe("MealScheduleComponent", () => {
       //TODO: Check the default date/moment parameters for the initial get
    });
    
-   it("registers to recipe selection events", () => {
+   it("registers to recipe events", () => {
       
-      expect(eventEmitterMock.subscribe).toHaveBeenCalled();
+      expect(recipeSelectedEvent.subscribe).toHaveBeenCalled();
+      expect(recipeUpdatedEvent.subscribe).toHaveBeenCalled();
+      expect(recipeDeletedEvent.subscribe).toHaveBeenCalled();
    });
    
    describe("as the schedule data completes downloading", () => {
@@ -55,10 +61,10 @@ describe("MealScheduleComponent", () => {
       
       var data = [
          { day = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1), recipeId: "" },
-         { day = new Date(today.getFullYear(), today.getMonth(), today.getDate()), recipeId: "scheduled" },
+         { day = new Date(today.getFullYear(), today.getMonth(), today.getDate()), recipeId: "scheduled", recipe: {Name: "Test"}},
          { day = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1), recipeId: "" },
          { day = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2), recipeId: "" },
-         { day = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3), recipeId: "scheduled" },
+         { day = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3), recipeId: "scheduled", recipe: {Name: "Test"}},
          { day = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 4), recipeId: "" }
          ];
       
@@ -66,7 +72,7 @@ describe("MealScheduleComponent", () => {
       
       beforeEach(() => {
          
-         onDataDownloaded = getResultObservable.calls.mostRecent().args[0];
+         onDataDownloaded = getResultObservable.subscribe.calls.mostRecent().args[0];
          
          onDataDownloaded(data);
       });
@@ -99,7 +105,7 @@ describe("MealScheduleComponent", () => {
              
              mealScheduleComponent.onSelect(data[3]);
              
-             var onRecipeScheduled = eventEmitterMock.subscribe.calls.mostRecent().args[0];
+             var onRecipeScheduled = recipeSelectedEvent.subscribe.calls.mostRecent().args[0];
              
              onRecipeScheduled(testRecipe);
           });
@@ -141,12 +147,13 @@ describe("MealScheduleComponent", () => {
          beforeEach(() =>{
             mealScheduleComponent.onSelect(data[1]);
             
-            var onRecipeScheduled = eventEmitterMock.subscribe.calls.mostRecent().args[0];
+            var onRecipeScheduled = recipeSelectedEvent.subscribe.calls.mostRecent().args[0];
              
              onRecipeScheduled(testRecipe);
          });
          
          it("it updates the schedule day recipe id", () => {
+            
             expect(mealScheduleComponent.selectedDay.recipeId).toBe(testRecipe._id)
          });
          
@@ -163,23 +170,63 @@ describe("MealScheduleComponent", () => {
       
       describe("as a recipe is unscheduled", () => {
           
-          it("it updates the schedule day recipe id");
+          beforeEach(() => {
+             
+               mealScheduleComponent.onSelect(data[1]);
+
+               mealScheduleComponent.onClear(data[1]);
+          });
           
-          it("it deletes the schedule day from the resource");
+          it("it updates the schedule day recipe id", () =>{
+             
+             expect(mealScheduleComponent.selectedDay.recipeId).toBe("");
+             expect(mealScheduleComponent.selectedDay.recipe).toBe("");
+          });
+          
+          it("it deletes the schedule day from the resource", () => {
+             
+             expect(mealScheduleResourceMock.delete).toHaveBeenCalledWith(data[1]);
+          });
       
-          it("it informs the ShoppingListService");
+          xit("it informs the ShoppingListService");
       });
       
       describe("as a recipe is updated succesfully", () => {
           
-          it("any days with this recipe scheduled update their recipe data");
+          var updatedRecipe = {_id: "Scheduled", name: "Updated"};
+          
+          beforeEach(() => {
+             
+             var onRecipeUpdated = recipeUpdatedEvent.subscribe.calls.mostRecent().args[0];
+             
+             onRecipeUpdated(updatedRecipe);
+          });
+          
+          it("any days with this recipe scheduled update their recipe data", () => {
+             
+             expect(data[1].recipe.name).toBe("Updated");
+             expect(data[4].recipe.name).toBe("Updated");
+          });
       });
       
       describe("as a recipe is deleted succesfully", () => {
           
-          it("any days with this recipe revert back to being unscheduled");
-      });
+          var deletedRecipe = {_id: "Scheduled"};
 
+          beforeEach(() => {
+             
+             var onRecipeDeleted = recipeDeletedEvent.subscribe.calls.mostRecent().args[0];
+             
+             onRecipeDeleted(deletedRecipe);
+          });
+          
+          it("any days with this recipe revert back to being unscheduled", () =>{
+             
+             expect(data[1].recipe).toBeUndefined();
+             expect(data[1].recipeId).toBe("");
+             expect(data[4].recipe).toBeUndefined();
+             expect(data[4].recipeId).toBe("");
+          });
+      });
    });
-   
 });
