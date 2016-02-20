@@ -1,0 +1,15 @@
+<div class="list">
+    <h2>Meal Schedule</h2>
+    <div class="days" 
+        *ngFor="#day of scheduleDays"
+        [class.selected]="day === selectedDay"
+        (click)="onSelect(day)">
+        Date: {{day.day}} 
+        <div *ngIf="day.recipe" class="recipe">
+            Recipe: {{day.recipe.name}}    
+        </div>
+        <div class="buttons">
+            <button type="button" (click)="onClear(day)">Clear</button>
+        </div>
+    </div>
+</div>

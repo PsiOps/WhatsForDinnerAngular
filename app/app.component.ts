@@ -1,5 +1,6 @@
 import {Component} from 'angular2/core';
 import {RecipeListComponent} from './recipe-list/recipe-list.component';
+import {MealScheduleComponent} from './meal-schedule/meal-schedule.component';
 import {RecipeResource} from './services/web/recipe.resource';
 import {ScheduleDayResource} from './services/web/schedule-day.resource';
 import {ResourceService} from './services/web/resource.service';
@@ -19,7 +20,7 @@ import {AppConfig} from './app.config';
                 HTTP_PROVIDERS, 
                 AppConfig,
                 HeaderFactory],
-    directives: [RecipeListComponent],
+    directives: [RecipeListComponent, MealScheduleComponent],
     templateUrl: 'app/app.component.html'
 })
 

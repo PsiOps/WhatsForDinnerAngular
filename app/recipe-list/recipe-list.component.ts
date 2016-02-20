@@ -4,6 +4,7 @@ import {RecipeFormComponent} from './recipe-form/recipe-form.component';
 import {OnInit} from 'angular2/core';
 import {RecipeResource} from '../services/web/recipe.resource';
 import {RecipeFactory} from '../factories/recipe.factory';
+import {RecipeEventAggregator} from '../services/recipe.event-aggregator';
 
 @Component({
     selector: 'recipe-list',
@@ -16,7 +17,8 @@ import {RecipeFactory} from '../factories/recipe.factory';
 export class RecipeListComponent implements OnInit
 {
     constructor(private _recipeResource: RecipeResource,
-                private _recipeFactory: RecipeFactory){};
+                private _recipeFactory: RecipeFactory,
+                private recipeEventAggregator: RecipeEventAggregator){};
     
     ngOnInit() {
         this.getRecipes();
@@ -25,7 +27,7 @@ export class RecipeListComponent implements OnInit
     private getRecipes() : void {
         this._recipeResource.get().subscribe(
             recipes => this.recipes = recipes,
-            error => onHttpError(error)));
+            error => this.onHttpError(error)));
     };
     
     public recipes : Recipe[] = [];
@@ -53,6 +55,10 @@ export class RecipeListComponent implements OnInit
         this.isCardVisible = true;
     };
     
+    public onSchedule(recipe: Recipe): void {
+        this.recipeEventAggregator.onRecipeMarkedForScheduling(recipe);
+    };
+    
     public onDeleteButtonClicked(recipe: Recipe): void {
         this.selectedRecipe = undefined;
         
@@ -63,6 +69,8 @@ export class RecipeListComponent implements OnInit
                     this.getRecipes();
                 },
                 error => this.onHttpError(error)));
+                
+        this.recipeEventAggregator.onRecipeDeleted(recipe);
     };
     
     public onFormClosed() : void {
@@ -76,6 +84,8 @@ export class RecipeListComponent implements OnInit
                 .subscribe(
                     res => console.log(res),
                     error => this.onHttpError(error)));    
+
+            this.recipeEventAggregator.onRecipeUpdated(this.selectedRecipe);
 
             return;
         }

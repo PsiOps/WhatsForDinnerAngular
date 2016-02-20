@@ -29,11 +29,12 @@ export class MealScheduleComponent implements OnInit
     
     private getSchedule() : void {
       
-        var now = moment();
+        var from = moment().subtract(7, 'day').toDate();
+        var upTo = moment().add(14, 'day').toDate();
       
-        this.scheduleResource.get(now.add(-7, 'day'), now.add(14, 'day'))
+        this.scheduleResource.get(from, upTo)
             .subscribe(days => this.setScheduleAndSelectedDay(days),
-                error => onHttpError(error));
+                error => this.onHttpError(error));
     };
     
     private setScheduleAndSelectedDay(scheduleDays : ScheduleDay[]){
@@ -51,7 +52,7 @@ export class MealScheduleComponent implements OnInit
             
             var scheduleDay = this.scheduleDays[i];
             
-            if(this.isInThePast(scheduleDay.day)){
+            if(this.isInThePast(scheduleDay)){
                 continue;
             }
             
@@ -64,23 +65,18 @@ export class MealScheduleComponent implements OnInit
         
         var dayMoment = moment(scheduleDay.day).startOf('day');
         
-        console.log(dayMoment.format());
-        
         var today = moment().startOf('day');
         
-        console.log(today.format());
-        
         if(dayMoment.isBefore(today)){
-            console.log("IsBefore true")
             return true;
         }
 
-        console.log("IsBefore false");
         return false;
     }
     
     private registerToRecipeEvents(){
-        this.recipeEventAggregator.recipeMarkedForScheduling.subscribe(recipe => this.onRecipeMarkedForScheduling(recipe));
+        this.recipeEventAggregator.recipeMarkedForScheduling
+            .subscribe(recipe => this.onRecipeMarkedForScheduling(recipe));
         this.recipeEventAggregator.recipeUpdated.subscribe(recipe => this.onRecipeUpdated(recipe));
         this.recipeEventAggregator.recipeDeleted.subscribe(recipe => this.onRecipeDeleted(recipe));
     };
@@ -94,8 +90,10 @@ export class MealScheduleComponent implements OnInit
     
     public onClear(day: ScheduleDay) : void {
         
-        this.selectedDay.recipeId = null;
-        this.selectedDay.recipe = null;
+        if(this.isInThePast(day)) return;
+
+        day.recipeId = null;
+        day.recipe = null;
         
         this.scheduleResource.delete(day);
     }
@@ -121,10 +119,7 @@ export class MealScheduleComponent implements OnInit
     
     private hasRecipe(day: ScheduleDay){
         
-        console.log(this);
-        console.log(day);
-        
-        return day.recipeId == this._id;
+        return day.recipeId == this._id; // this here is the recipe
     };
     
     private onRecipeUpdated(recipe: Recipe){

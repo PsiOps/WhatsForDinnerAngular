@@ -9,6 +9,12 @@ describe("Recipe List", () => {
     var mockRecipeFactory;
     var testRecipe = {name: "TestRecipe"};
     
+    var recipeEventAggregator = {
+        onRecipeMarkedForScheduling: function(){},
+        onRecipeUpdated: function(){},
+        onRecipeDeleted: function(){}
+    };
+    
     beforeEach(() => {
         
         mockResource = { get: function(){}, delete: function(){}, post: function(){}, put: function(){}};
@@ -26,7 +32,11 @@ describe("Recipe List", () => {
         
         spyOn(mockRecipeFactory, 'create').and.returnValue(testRecipe);
 
-        recipeListComponent = new RecipeListComponent(mockResource, mockRecipeFactory);
+        spyOn(recipeEventAggregator, 'onRecipeMarkedForScheduling');
+        spyOn(recipeEventAggregator, 'onRecipeUpdated');
+        spyOn(recipeEventAggregator, 'onRecipeDeleted');
+
+        recipeListComponent = new RecipeListComponent(mockResource, mockRecipeFactory, recipeEventAggregator);
         
         recipeListComponent.ngOnInit();
     });
@@ -147,6 +157,11 @@ describe("Recipe List", () => {
             
             expect(mockResource.get.calls.count()).toEqual(2);
         });
+        
+        it("Communicates the deletion through the RecipeEventAggregator", () => {
+            
+            expect(recipeEventAggregator.onRecipeDeleted).toHaveBeenCalledWith(testRecipe);
+        });
     });
     
     describe("When the user closes the recipe card", () => {
@@ -198,6 +213,24 @@ describe("Recipe List", () => {
         
         it("Calls put on the resource", () => {
             expect(mockResource.put).toHaveBeenCalled();
+        });
+        
+        it("Communicates the update through the RecipeEventAggregator", () => {
+            
+            expect(recipeEventAggregator.onRecipeUpdated).toHaveBeenCalledWith(recipeListComponent.selectedRecipe);
+        });
+    });
+    
+    describe("When the user marks a recipe for scheduling", () => {
+       
+       beforeEach(() => {
+           
+           recipeListComponent.onSchedule(testRecipe);
+       });
+       
+        it("Communicates the scheduling through the RecipeEventAggregator", () => {
+            
+            expect(recipeEventAggregator.onRecipeMarkedForScheduling).toHaveBeenCalledWith(testRecipe);
         });
     });
 });
