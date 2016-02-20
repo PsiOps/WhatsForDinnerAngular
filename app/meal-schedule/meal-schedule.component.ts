@@ -52,11 +52,10 @@ export class MealScheduleComponent implements OnInit
             var scheduleDay = this.scheduleDays[i];
             
             if(this.isInThePast(scheduleDay.day)){
-                console.log("continuing");
                 continue;
             }
             
-            if(scheduleDay.recipeId == undefined)
+            if(scheduleDay.recipeId == null)
                 return scheduleDay;
         }
     };
@@ -82,9 +81,24 @@ export class MealScheduleComponent implements OnInit
     
     private registerToRecipeEvents(){
         this.recipeEventAggregator.recipeMarkedForScheduling.subscribe(recipe => this.onRecipeMarkedForScheduling(recipe));
-        this.recipeEventAggregator.recipeUpdated.subscribe();
-        this.recipeEventAggregator.recipeDeleted.subscribe();
+        this.recipeEventAggregator.recipeUpdated.subscribe(recipe => this.onRecipeUpdated(recipe));
+        this.recipeEventAggregator.recipeDeleted.subscribe(recipe => this.onRecipeDeleted(recipe));
     };
+    
+    public onSelect(day: ScheduleDay) : void {
+
+        if(this.isInThePast(day)) return;
+
+        this.selectedDay = day;
+    };
+    
+    public onClear(day: ScheduleDay) : void {
+        
+        this.selectedDay.recipeId = null;
+        this.selectedDay.recipe = null;
+        
+        this.scheduleResource.delete(day);
+    }
     
     private onRecipeMarkedForScheduling(recipe: Recipe){
         
@@ -105,11 +119,29 @@ export class MealScheduleComponent implements OnInit
         this.selectedDay = this.getNextScheduleTarget(nextTargetStartIndex);
     }
     
-     public onSelect(day: ScheduleDay) : void {
-
-        if(this.isInThePast(day)) return;
-
-        this.selectedDay = day;
+    private hasRecipe(day: ScheduleDay){
+        
+        console.log(this);
+        console.log(day);
+        
+        return day.recipeId == this._id;
+    };
+    
+    private onRecipeUpdated(recipe: Recipe){
+        
+        this.scheduleDays.filter(this.hasRecipe, recipe).forEach(day => {
+            
+            day.recipe.name = recipe.name;
+        });
+    };
+    
+    private onRecipeDeleted(recipe: Recipe){
+        
+        this.scheduleDays.filter(this.hasRecipe, recipe).forEach(day => {
+            
+            day.recipeId = null;
+            day.recipe = null;
+        });
     };
     
     private onHttpError(error: any){

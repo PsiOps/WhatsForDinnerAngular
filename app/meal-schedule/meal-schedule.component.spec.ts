@@ -69,18 +69,20 @@ describe("MealScheduleComponent", () => {
       
       var today = new moment();
       
-      var data = [
-         { day: today.add(-1, 'day').toDate() },
-         { day: today.toDate(), recipeId: "scheduled", recipe: {Name: "Test"}},
-         { day: today.add(1, 'day').toDate() },
-         { day: today.add(2, 'day').toDate() },
-         { day: today.add(3, 'day').toDate(), recipeId: "scheduled", recipe: {Name: "Test"}},
-         { day: today.add(4, 'day').toDate() }
-         ];
+      var data;
       
       var onDataDownloaded;
       
       beforeEach(() => {
+         
+         data = [
+         { day: today.add(-1, 'day').toDate() },
+         { day: today.toDate(), recipeId: "Scheduled", recipe: {Name: "Test"}},
+         { day: today.add(1, 'day').toDate() },
+         { day: today.add(2, 'day').toDate() },
+         { day: today.add(3, 'day').toDate(), recipeId: "Scheduled", recipe: {Name: "Test"}},
+         { day: today.add(4, 'day').toDate() }
+         ];
          
          onDataDownloaded = getResultObservable.subscribe.calls.mostRecent().args[0];
          
@@ -189,8 +191,8 @@ describe("MealScheduleComponent", () => {
           
           it("it updates the schedule day recipe id", () =>{
              
-             expect(mealScheduleComponent.selectedDay.recipeId).toBe("");
-             expect(mealScheduleComponent.selectedDay.recipe).toBe("");
+             expect(mealScheduleComponent.selectedDay.recipeId).toBeNull();
+             expect(mealScheduleComponent.selectedDay.recipe).toBeNull();
           });
           
           it("it deletes the schedule day from the resource", () => {
@@ -198,7 +200,7 @@ describe("MealScheduleComponent", () => {
              expect(mealScheduleResourceMock.delete).toHaveBeenCalledWith(data[1]);
           });
       
-          xit("it informs the ShoppingListService");
+          it("it informs the ShoppingListService");
       });
       
       describe("as a recipe is updated succesfully", () => {
@@ -232,10 +234,10 @@ describe("MealScheduleComponent", () => {
           
           it("any days with this recipe revert back to being unscheduled", () =>{
              
-             expect(data[1].recipe).toBeUndefined();
-             expect(data[1].recipeId).toBe("");
-             expect(data[4].recipe).toBeUndefined();
-             expect(data[4].recipeId).toBe("");
+             expect(data[1].recipe).toBeNull();
+             expect(data[1].recipeId).toBeNull();
+             expect(data[4].recipe).toBeNull();
+             expect(data[4].recipeId).toBeNull();
           });
       });
    });
