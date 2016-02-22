@@ -188,7 +188,7 @@ describe("Recipe List", () => {
             expect(mockResource.post).toHaveBeenCalled();
             });
             
-        it("Updates the selectedRecipe with the post result", () => {
+        it("Updates the selectedRecipe's Id with the post result", () => {
             var args = mockObservable.subscribe.calls.mostRecent().args;
         
             var onSucces = args[0];
@@ -197,7 +197,7 @@ describe("Recipe List", () => {
          
             onSucces(postedRecipe);
             
-            expect(recipeListComponent.selectedRecipe).toEqual(postedRecipe);
+            expect(recipeListComponent.selectedRecipe._id).toEqual(postedRecipe._id);
         });
     });
     

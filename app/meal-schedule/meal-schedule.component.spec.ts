@@ -18,19 +18,19 @@ describe("MealScheduleComponent", () => {
       
       mealScheduleResourceMock = {
          get: function(){},
-         post: function(){},
          put: function(){},
          delete: function(){}
       };
       
       getResultObservable = {subscribe: function(){}};
+      putResultObservable = {subscribe: function(){}};
+      deleteResultObservable = {subscribe: function(){}};
       
       spyOn(getResultObservable, 'subscribe');
    
       spyOn(mealScheduleResourceMock, 'get').and.returnValue(getResultObservable);
-      spyOn(mealScheduleResourceMock, 'post');
-      spyOn(mealScheduleResourceMock, 'put');
-      spyOn(mealScheduleResourceMock, 'delete');
+      spyOn(mealScheduleResourceMock, 'put').and.returnValue(putResultObservable);
+      spyOn(mealScheduleResourceMock, 'delete').and.returnValue(deleteResultObservable);
       
       recipeSelectedEvent = {subscribe: function(){}};
       recipeUpdatedEvent = {subscribe: function(){}};
@@ -126,9 +126,9 @@ describe("MealScheduleComponent", () => {
              expect(data[3].recipeId).toBe(testRecipe._id)
           });
           
-          it("it posts the updated schedule day to the resource", () => {
+          it("it puts the updated schedule day to the resource", () => {
              
-             expect(mealScheduleResourceMock.post).toHaveBeenCalled();
+             expect(mealScheduleResourceMock.put).toHaveBeenCalled();
           });
           
           it("it informs the ShoppingListService");

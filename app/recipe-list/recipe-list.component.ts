@@ -56,6 +56,7 @@ export class RecipeListComponent implements OnInit
     };
     
     public onSchedule(recipe: Recipe): void {
+        
         this.recipeEventAggregator.onRecipeMarkedForScheduling(recipe);
     };
     
@@ -94,12 +95,13 @@ export class RecipeListComponent implements OnInit
             .subscribe(
                 res => {
                     console.log(res);
-                    this.selectedRecipe = res;
+                    this.selectedRecipe._id = res._id;
                 },
                 error => this.onHttpError(error)));
     };
     
     private onHttpError(error: any){
-        console.log("An error was thrown: " + error.text());
+        
+        console.log("An error was thrown: " + error.text);
     };
 }

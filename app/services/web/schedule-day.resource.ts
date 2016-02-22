@@ -1,6 +1,7 @@
 import {Injectable} from 'angular2/core';
 import {ScheduleDay} from '../../models/schedule-day';
 import {ResourceService} from './resource.service'
+import 'rxjs/add/operator/map';
 
 @Injectable()
 
@@ -8,39 +9,31 @@ export class ScheduleDayResource {
     
     constructor(private resourceService: ResourceService){ }
     
-    public get(): any {
-        
-        return this.resourceService.get('scheduledays');
-    }
-    
     public get(from: Date, upTo: Date){
         
-        var resourceQuery = `scheduledays?from=${from}&upto=${upTo}`;
+        var resourceQuery = `scheduledays?from=${from.getTime()}&upto=${upTo.getTime()}`;
         
-        return this.resourceService.get(resourceQuery);
-    }
-    
-    public post(scheduleDay: ScheduleDay) : any {
-    
-        return this.resourceService.post('scheduledays', scheduleDay);
+        return this.resourceService.get(resourceQuery)
+            .map(days => {
+                days.forEach(day => {
+                    
+                    day.day = new Date(day.day);
+                });
+                
+                return days;
+            });
     }
     
     public put(scheduleDay: ScheduleDay) : any {
         
-        if(!scheduleDay._id)
-            throw Error("Cannot PUT a ScheduleDay without valid Id");
-        
-        var resouceLocation = `scheduledays/${scheduleDay._id}`;
+        var resouceLocation = `scheduledays/${scheduleDay.day.getTime()}`;
         
         return this.resourceService.put(resouceLocation, scheduleDay);
     }
     
     public delete(scheduleDay: ScheduleDay) : any {
         
-        if(!scheduleDay._id)
-            return {};
-            
-        var resouceLocation = `scheduledays/${scheduleDay._id}`;
+        var resouceLocation = `scheduledays/${scheduleDay.day.getTime()}`;
 
         return this.resourceService.delete(resouceLocation);
     }

@@ -11,31 +11,22 @@ describe("ScheduleDayResource", () => {
         delete: function(){}
     };
     
+    var observable = {map: function(){}};
+    
     beforeEach(() => {
         
-        spyOn(resourceServiceMock, 'get');
-        spyOn(resourceServiceMock, 'post');
-        spyOn(resourceServiceMock, 'put');
-        spyOn(resourceServiceMock, 'delete');
+        spyOn(resourceServiceMock, 'get').and.returnValue(observable);
+        spyOn(resourceServiceMock, 'post').and.returnValue(observable);
+        spyOn(resourceServiceMock, 'put').and.returnValue(observable);
+        spyOn(resourceServiceMock, 'delete').and.returnValue(observable);
         
         scheduleDayResource = new ScheduleDayResource(resourceServiceMock);
     });
     
-    describe("Get", () => {
-        
-        beforeEach(() => {
-            scheduleDayResource.get();
-        });
-        
-        it("Calls get on the resource service", () => {
-            expect(resourceServiceMock.get).toHaveBeenCalled();
-        });
-    });
-    
     describe("Get with date parameters", () => {
         
-        var from = new Date(2015, 1, 20).toString();
-        var upTo = new Date(2015, 1 , 28).toString();
+        var from = new Date(2015, 1, 20);
+        var upTo = new Date(2015, 1 , 28);
         
         beforeEach(() => {
             
@@ -44,7 +35,7 @@ describe("ScheduleDayResource", () => {
         
         it("calls resourceservice with queried resourcelocation", () => {
             
-            var location = `scheduledays?from=${from}&upto=${upTo}`;
+            var location = `scheduledays?from=${from.getTime()}&upto=${upTo.getTime()}`;
             
             console.log(location);
             
@@ -52,23 +43,9 @@ describe("ScheduleDayResource", () => {
         })
     });
     
-    describe("Post", () => {
-        
-        var scheduleDay = {};
-        
-        beforeEach(() => {
-            
-            scheduleDayResource.post(scheduleDay);
-        });
-        
-        it("Calls post on the resource service", () => {
-            expect(resourceServiceMock.post).toHaveBeenCalled();
-        });
-    });
-    
     describe("Put", () => {
         
-        var scheduleDay = {_id: "TestId"};
+        var scheduleDay = {_id: "TestId", day: new Date()};
         
         beforeEach(() => {
             
@@ -82,7 +59,7 @@ describe("ScheduleDayResource", () => {
     
     describe("Delete", () => {
         
-        var scheduleDay = {_id: "TestId"};
+        var scheduleDay = {_id: "TestId", day: new Date()};
         
         beforeEach(() => {
             

@@ -18,27 +18,27 @@ export class ResourceService {
         _baseUrl = appConfig.baseUrl;
     }
     
-        public get(resource: string): any {
+    public get(resource: string): any {
         
         return this.http.get(_baseUrl + resource)
             .map(res => res.json());
     }
     
     public post(resource: string, data: any) : any {
-    
+
         return this.http.post(_baseUrl + resource, JSON.stringify(data), {headers:this.headerFactory.create()})
-            .map(res => res.json())
+            .map(res => res.json());
     }
     
     public put(resource: string, data: any) : any {
         
         return this.http.put(_baseUrl + resource, JSON.stringify(data), {headers:this.headerFactory.create()})
-            .map(res => res.json())
+            .map(res => res.json());
     }
     
     public delete(resource: string) : any {
         
-        return this.http.delete(resource, {headers:this.headerFactory.create()})
-            .map(res => res.json())
+        return this.http.delete(_baseUrl + resource, {headers:this.headerFactory.create()})
+            .map(res => res.json());
     }
 }

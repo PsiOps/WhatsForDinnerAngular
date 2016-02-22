@@ -75,10 +75,15 @@ export class MealScheduleComponent implements OnInit
     }
     
     private registerToRecipeEvents(){
+        
         this.recipeEventAggregator.recipeMarkedForScheduling
             .subscribe(recipe => this.onRecipeMarkedForScheduling(recipe));
-        this.recipeEventAggregator.recipeUpdated.subscribe(recipe => this.onRecipeUpdated(recipe));
-        this.recipeEventAggregator.recipeDeleted.subscribe(recipe => this.onRecipeDeleted(recipe));
+            
+        this.recipeEventAggregator.recipeUpdated
+            .subscribe(recipe => this.onRecipeUpdated(recipe));
+            
+        this.recipeEventAggregator.recipeDeleted
+            .subscribe(recipe => this.onRecipeDeleted(recipe));
     };
     
     public onSelect(day: ScheduleDay) : void {
@@ -95,22 +100,18 @@ export class MealScheduleComponent implements OnInit
         day.recipeId = null;
         day.recipe = null;
         
-        this.scheduleResource.delete(day);
+        this.scheduleResource.delete(day).subscribe(
+            (response) => console.log(`Succes: ${response.message}`),
+            (error) => console.log(`Error: ${error.message}`));
     }
     
     private onRecipeMarkedForScheduling(recipe: Recipe){
         
-        var isPost = this.selectedDay.recipeId == undefined;
-        
         this.selectedDay.recipeId = recipe._id;
         this.selectedDay.recipe = recipe;
         
-        if(isPost){
-            this.scheduleResource.post(this.selectedDay);
-        }
-        else{
-            this.scheduleResource.put(this.selectedDay);
-        }
+        this.scheduleResource.put(this.selectedDay).subscribe(
+            this.onHttpSucces, this.onHttpError);
         
         var nextTargetStartIndex = this.scheduleDays.indexOf(this.selectedDay) + 1;
         
@@ -140,6 +141,10 @@ export class MealScheduleComponent implements OnInit
     };
     
     private onHttpError(error: any){
-        console.log("An error was thrown: " + error.text());
+        console.log("An error was thrown: " + error.text);
+    };
+    
+    private onHttpSucces(response: any){
+        console.log("Succes: " + response.message);
     };
 }
