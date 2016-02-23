@@ -6,14 +6,16 @@ export class ScheduleDayRow{
     constructor(scheduleDay: ScheduleDay, isInThePast: boolean){
         
         this.day = scheduleDay.day;
-        this.recipeId = scheduleDay.recipeId;
-        this.recipe = scheduleDay.recipe;
         this.isInThePast = isInThePast;
+
+        if(!scheduleDay.recipe) return;
+        
+        this.recipeId = scheduleDay.recipe._id;
+        this.recipe = scheduleDay.recipe;
     }
     
     public day: Date;
     public recipeId: string;
     public recipe: Recipe;
     public isInThePast: boolean;
-    
 }
