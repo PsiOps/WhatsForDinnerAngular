@@ -10,7 +10,7 @@
         </div>
         <div *ngIf="day.recipe" class="recipe">
             {{day.recipe.name}}
-            <div class="buttons">
+            <div class="buttons" *ngIf="!day.isInThePast">
                 <button type="button" (click)="onClear(day)">Clear</button>
             </div>
         </div>
