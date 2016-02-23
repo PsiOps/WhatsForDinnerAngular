@@ -3,13 +3,8 @@
     float: left;
 }
 
-.selected {
-    background-color: #CFD8DC !important;
-    color: white;
-}
-
 .days{
-    width: 200;
+    width: auto;
     height: 1.6em;
     margin: 0 0 2em 0;
     padding: 0;
@@ -18,29 +13,39 @@
     position: relative;
 }
 
+.selected {
+    background-color: #CFD8DC !important;
+    color: #212649;
+}
+
+.isInThePast{
+    background-color: #F4FAE2;
+    color: #95AEAB;
+}
+
 .day-badge{
     width: 100;
     height: 1.6em;
     float: left;
 }
-  
-/*.day-badge .selected:hover {
+
+.days.selected:hover {
     color: white;
 }
 
-.day-badge:hover {
+.days:hover {
     color: #607D8B;
     background-color: #EEE;
     left: .1em;
 }
 
-.day-badge .text {
+.days.text {
     position: relative;
     top: -3px;
-}*/
+}
 
 .recipe {
-    width: 100;
+    width: 200;
     background-color: #EEE;
     height: 1.6em;
     border-radius: 4px;

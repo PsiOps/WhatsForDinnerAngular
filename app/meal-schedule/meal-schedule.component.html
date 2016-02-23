@@ -2,9 +2,10 @@
     <h2>Meal Schedule</h2>
     <div class="days" 
         *ngFor="#day of scheduleDays"
-        (click)="onSelect(day)">
-        <div class="day-badge"
-            [class.selected]="day === selectedDay">
+        (click)="onSelect(day)"
+        [class.selected]="day === selectedDay"
+        [class.isInThePast]="day.isInThePast">
+        <div class="day-badge">
             {{ day.day | date:"EEE d/MMM" }}
         </div>
         <div *ngIf="day.recipe" class="recipe">

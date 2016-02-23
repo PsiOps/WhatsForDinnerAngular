@@ -8,6 +8,8 @@ describe("MealScheduleComponent", () => {
    
    var getResultObservable;
    
+   var scheduleDayRowFactory = {create: function(){}};
+   
    var recipeSelectedEvent;
    var recipeUpdatedEvent;
    var recipeDeletedEvent;
@@ -32,6 +34,8 @@ describe("MealScheduleComponent", () => {
       spyOn(mealScheduleResourceMock, 'put').and.returnValue(putResultObservable);
       spyOn(mealScheduleResourceMock, 'delete').and.returnValue(deleteResultObservable);
       
+      spyOn(scheduleDayRowFactory, 'create').and.callFake((dayModel) => return dayModel);
+      
       recipeSelectedEvent = {subscribe: function(){}};
       recipeUpdatedEvent = {subscribe: function(){}};
       recipeDeletedEvent = {subscribe: function(){}};
@@ -46,7 +50,7 @@ describe("MealScheduleComponent", () => {
       spyOn(recipeUpdatedEvent, 'subscribe');
       spyOn(recipeDeletedEvent, 'subscribe');
       
-      mealScheduleComponent = new MealScheduleComponent(mealScheduleResourceMock, recipeEventAggregator);
+      mealScheduleComponent = new MealScheduleComponent(mealScheduleResourceMock, recipeEventAggregator, scheduleDayRowFactory);
       
       mealScheduleComponent.ngOnInit();
    });
@@ -88,6 +92,11 @@ describe("MealScheduleComponent", () => {
          
          onDataDownloaded(data);
       });
+      
+      it("converts all incoming models into rows", () => {
+         
+         expect(scheduleDayRowFactory.create.calls.count()).toEqual(6);
+      })
       
       it("selects the first unscheduled day that is not in the past", () => {
          

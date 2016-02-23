@@ -4,21 +4,25 @@ import {ScheduleDayResource} from '../services/web/schedule-day.resource';
 import {ScheduleDay} from '../models/ScheduleDay'
 import {Recipe} from '../models/Recipe'
 import {RecipeEventAggregator} from '../services/recipe.event-aggregator';
+import {ScheduleDayRowFactory} from '../factories/schedule-day.row.factory';
+import {ScheduleDayRow} from './schedule-day.row';
 
 @Component({
     selector: 'meal-schedule',
+    providers: [ScheduleDayRowFactory],
     templateUrl: 'app/meal-schedule/meal-schedule.component.html',
     styleUrls: ['app/meal-schedule/meal-schedule.css']
 })
 
 export class MealScheduleComponent implements OnInit
 {
-    public scheduleDays : ScheduleDay[];
+    public scheduleDays : ScheduleDayRow[] = [];
     
     public selectedDay: ScheduleDay;
     
     constructor(private scheduleResource: ScheduleDayResource,
-        private recipeEventAggregator: RecipeEventAggregator){};
+        private recipeEventAggregator: RecipeEventAggregator,
+        private scheduleDayRowFactory: ScheduleDayRowFactory){};
     
     ngOnInit() {
         
@@ -39,7 +43,10 @@ export class MealScheduleComponent implements OnInit
     
     private setScheduleAndSelectedDay(scheduleDays : ScheduleDay[]){
         
-        this.scheduleDays = scheduleDays
+        scheduleDays.forEach(dayModel => {
+            
+            this.scheduleDays.push(this.scheduleDayRowFactory.create(dayModel, this.isInThePast(dayModel)))
+        });
         
         if(this.scheduleDays.length == 0) return;
         
