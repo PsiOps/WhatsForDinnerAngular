@@ -1,5 +1,6 @@
 import {Component} from 'angular2/core';
 import {Recipe} from '../../models/recipe';
+import {Ingredient} from '../../models/ingredient';
 import {EventEmitterFactory} from "../../factories/event-emitter.factory"
 
 @Component({
@@ -17,7 +18,26 @@ export class RecipeFormComponent
         this.submit = this._eventEmitterFactory.create();
     }
     
-    public recipe: Recipe;
+    private _recipe: Recipe;
+    public get recipe(): Recipe {
+        return this._recipe;
+    };
+    public set recipe(value: Recipe){
+        this._recipe = value;
+        
+        
+        if(!this._recipe) return;
+        
+        this.ingredients = this._recipe.ingredients;
+        
+        var ingredient = new Ingredient();
+        
+        ingredient.name = "Add ingredient..."
+        
+        this.ingredients.push(ingredient);
+    }
+    
+    public ingredients: Ingredient[] = [];
     
     public isVisible: Boolean;
     

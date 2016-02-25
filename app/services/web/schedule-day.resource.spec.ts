@@ -37,8 +37,6 @@ describe("ScheduleDayResource", () => {
             
             var location = `scheduledays?from=${from.getTime()}&upto=${upTo.getTime()}`;
             
-            console.log(location);
-            
             expect(resourceServiceMock.get).toHaveBeenCalledWith(location);
         })
     });

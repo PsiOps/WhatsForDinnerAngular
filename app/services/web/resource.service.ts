@@ -8,37 +8,37 @@ import {AppConfig} from '../../app.config';
 
 export class ResourceService {
     
-    private _baseUrl : String;
+    private baseUrl : String;
     
     constructor(
         private http: Http, 
         private headerFactory: HeaderFactory, 
         appConfig: AppConfig){
         
-        _baseUrl = appConfig.baseUrl;
+        this.baseUrl = appConfig.baseUrl;
     }
     
     public get(resource: string): any {
         
-        return this.http.get(_baseUrl + resource)
+        return this.http.get(this.baseUrl + resource)
             .map(res => res.json());
     }
     
     public post(resource: string, data: any) : any {
 
-        return this.http.post(_baseUrl + resource, JSON.stringify(data), {headers:this.headerFactory.create()})
+        return this.http.post(this.baseUrl + resource, JSON.stringify(data), {headers:this.headerFactory.create()})
             .map(res => res.json());
     }
     
     public put(resource: string, data: any) : any {
         
-        return this.http.put(_baseUrl + resource, JSON.stringify(data), {headers:this.headerFactory.create()})
+        return this.http.put(this.baseUrl + resource, JSON.stringify(data), {headers:this.headerFactory.create()})
             .map(res => res.json());
     }
     
     public delete(resource: string) : any {
         
-        return this.http.delete(_baseUrl + resource, {headers:this.headerFactory.create()})
+        return this.http.delete(this.baseUrl + resource, {headers:this.headerFactory.create()})
             .map(res => res.json());
     }
 }

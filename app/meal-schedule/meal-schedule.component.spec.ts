@@ -7,6 +7,8 @@ describe("MealScheduleComponent", () => {
    var mealScheduleResourceMock;
    
    var getResultObservable;
+   var putResultObservable;
+   var deleteResultObservable;
    
    var scheduleDayRowFactory = {create: function(){}};
    

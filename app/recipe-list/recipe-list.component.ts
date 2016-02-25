@@ -31,6 +31,7 @@ export class RecipeListComponent implements OnInit
     };
     
     public recipes : Recipe[] = [];
+    
     public selectedRecipe: Recipe;
     public isCardVisible: Boolean;
     

@@ -1,8 +1,20 @@
 <div class="form" *ngIf="isVisible">
     <h2>Recipe Form</h2>
-    <h3>Recipe: {{recipe.name}}</h3>
-    <div><label>Name: </label><input [(ngModel)]="recipe.name" type="text" /></div>
-    <div><label>Description: </label><input [(ngModel)]="recipe.description" type="text" /></div>
-    <div><button type="button" (click)="onCloseButtonClicked()">Close</button></div>
-    <div><button type="button" (click)="onSubmitButtonClicked()">Submit</button></div>
+    <div class="recipedetails">
+        <div><label>Name: </label><input [(ngModel)]="recipe.name" type="text" /></div>
+        <div><label>Description: </label><input [(ngModel)]="recipe.description" type="text" /></div>
+    </div>
+    <div class="ingredientlist">
+        <table>
+            <tr *ngFor="#ingredient of ingredients">
+                <td><input [(ngModel)]="ingredient.name" type="text" name=""/></td>
+                <td><input [(ngModel)]="ingredient.amount" type="text" name=""/></td>
+                <td><input [(ngModel)]="ingredient.unit" type="text" name=""/></td>
+            </tr>
+        </table>
+    </div>
+    <div class="buttons">
+        <div><button type="button" (click)="onCloseButtonClicked()">Close</button></div>
+        <div><button type="button" (click)="onSubmitButtonClicked()">Submit</button></div>    
+    </div>
 </div>

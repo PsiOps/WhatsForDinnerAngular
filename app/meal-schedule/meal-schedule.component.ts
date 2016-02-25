@@ -55,7 +55,7 @@ export class MealScheduleComponent implements OnInit
     
     private getNextScheduleTarget(startIndex: number){
       
-        for (i = startIndex; i < this.scheduleDays.length; i++) { 
+        for (var i = startIndex; i < this.scheduleDays.length; i++) { 
             
             var scheduleDay = this.scheduleDays[i];
             

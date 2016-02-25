@@ -7,3 +7,14 @@
     background-color: gray;
     z-index: 999;
 }
+
+.recipedetails{
+    float:left;
+}
+
+.ingredientlist{
+    float:right;
+}
+.buttons{
+    clear:both;
+}
