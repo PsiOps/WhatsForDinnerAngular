@@ -6,10 +6,18 @@
     </div>
     <div class="ingredientlist">
         <table>
+            <tr>
+                <th>Name</th>
+                <th>Qty</th>
+                <th>Unit</th>
+            </tr>
             <tr *ngFor="#ingredient of ingredients">
-                <td><input [(ngModel)]="ingredient.name" type="text" name=""/></td>
-                <td><input [(ngModel)]="ingredient.amount" type="text" name=""/></td>
-                <td><input [(ngModel)]="ingredient.unit" type="text" name=""/></td>
+                <td><input [(ngModel)]="ingredient.ingredient" type="text" name="" placeholder="Add ingredient..." 
+                    (keydown)="onRowEdit(ingredient.isInsertRow)"/></td>
+                <td><input [(ngModel)]="ingredient.amount" type="text" name="" 
+                    (keydown)="onRowEdit(ingredient.isInsertRow)"/></td>
+                <td><input [(ngModel)]="ingredient.unit" type="text" name="" 
+                    (keydown)="onRowEdit(ingredient.isInsertRow)"/></td>
             </tr>
         </table>
     </div>

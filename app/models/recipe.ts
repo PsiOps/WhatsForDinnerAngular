@@ -1,7 +1,7 @@
-import {Ingredient} from './Ingredient';
+import {RecipeIngredient} from './recipe-ingredient';
 
 export class Recipe{
     name: string;
     description: string;
-    ingredients: Ingredient[];
+    ingredients: RecipeIngredient[];
 }

@@ -1,11 +1,14 @@
 import {Component} from 'angular2/core';
 import {Recipe} from '../../models/recipe';
-import {Ingredient} from '../../models/ingredient';
-import {EventEmitterFactory} from "../../factories/event-emitter.factory"
+import {RecipeIngredient} from '../../models/recipe-ingredient';
+import {EventEmitterFactory} from "../../factories/event-emitter.factory";
+import {RecipeIngredientRowFactory} from "../../factories/recipe-ingredient.row.factory";
+import {RecipeIngredientRow} from "./recipe-ingredient.row";
 
 @Component({
     selector: 'recipe-form',
     templateUrl: 'app/recipe-list/recipe-form/recipe-form.component.html',
+    providers: [RecipeIngredientRowFactory],
     styleUrls: ['app/recipe-list/recipe-form/recipe-form.css'],
     inputs: ['recipe', 'isVisible'],
     outputs: ['close', 'submit']
@@ -13,9 +16,10 @@ import {EventEmitterFactory} from "../../factories/event-emitter.factory"
 
 export class RecipeFormComponent
 {
-    constructor(private _eventEmitterFactory: EventEmitterFactory){
-        this.close = this._eventEmitterFactory.create();
-        this.submit = this._eventEmitterFactory.create();
+    constructor(eventEmitterFactory: EventEmitterFactory,
+                private _recipeIngredientRowFactory: RecipeIngredientRowFactory){
+        this.close = eventEmitterFactory.create();
+        this.submit = eventEmitterFactory.create();
     }
     
     private _recipe: Recipe;
@@ -23,21 +27,24 @@ export class RecipeFormComponent
         return this._recipe;
     };
     public set recipe(value: Recipe){
-        this._recipe = value;
         
+        console.log("Recipe set");
+        
+        this._recipe = value;
         
         if(!this._recipe) return;
         
-        this.ingredients = this._recipe.ingredients;
+        this._recipe.ingredients.forEach(ingredient => {
+            
+            var row = this._recipeIngredientRowFactory.create(ingredient);
+            
+            this.ingredients.push(row);
+        });
         
-        var ingredient = new Ingredient();
-        
-        ingredient.name = "Add ingredient..."
-        
-        this.ingredients.push(ingredient);
+        this.addInsertRow();
     }
     
-    public ingredients: Ingredient[] = [];
+    public ingredients: RecipeIngredient[] = [];
     
     public isVisible: Boolean;
     
@@ -50,6 +57,43 @@ export class RecipeFormComponent
     public submit: EventEmitter;
     
     public onSubmitButtonClicked() : void {
+        
+        this.recipe.ingredients = [];
+        
+        this.ingredients.filter(this.isNotInsertRow).forEach(ingredientRow => {
+            
+            console.log(ingredientRow);
+            
+            var ingredient = {_id: ingredientRow.ingredientId, name: ingredientRow.ingredient};
+            
+            var recipeIngredient = {amount: ingredientRow.amount, unit: ingredientRow.unit, ingredient: ingredient};
+
+            console.log(recipeIngredient);
+
+            this.recipe.ingredients.push(recipeIngredient);
+        });
+        
         this.submit.next();
+    }
+    
+    private isNotInsertRow(ingredientRow: RecipeIngredientRow) : boolean {
+        
+        return ingredientRow.isInsertRow == false;
+    }
+    
+    public onRowEdit(isInsertRow: boolean) : void {
+        
+        if(!isInsertRow) return;
+        
+        this.ingredients[this.ingredients.length-1].isInsertRow = false;
+        
+        this.addInsertRow();
+    }
+    
+    private addInsertRow(): void {
+        
+        var insertRow = this._recipeIngredientRowFactory.createInsertRow()
+        
+        this.ingredients.push(insertRow);
     }
 }
